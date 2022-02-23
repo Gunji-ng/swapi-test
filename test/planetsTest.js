@@ -5,91 +5,9 @@ chai.use(chaiHttp);
 chai.use(require('chai-json-schema-ajv'));
 
 const expect = chai.expect;
+const nock = require('nock');
 
-const planetSchema = {
-  title: 'Planets Schema',
-  type: 'object',
-  required: ['name',
-    'rotation_period',
-    'orbital_period',
-    'diameter',
-    'climate',
-    'gravity',
-    'terrain',
-    'surface_water',
-    'population',
-    'residents',
-    'films',
-    'created',
-    'edited',
-    'url'],
-  properties: {
-    'name': {
-      type: 'string',
-      minLength: 2
-    },
-    'rotation_period': {
-      type: 'string',
-      minLength: 1
-    },
-    'orbital_period': {
-      type: 'string',
-      minLength: 2
-    },
-    'diameter': {
-      type: 'string',
-      minLength: 1
-    },
-    'climate': {
-      type: 'string',
-      minLength: 3
-    },
-    'gravity': {
-      type: 'string',
-      minLength: 1
-    },
-    'terrain': {
-      type: 'string',
-      minLength: 3
-    },
-    'surface_water': {
-      type: 'string',
-      minLength: 1
-    },
-    'population':{
-      type: 'string',
-      minLength: 1
-    },
-    'residents':{
-      type: 'array',
-      uniqueItems: true,
-      minItems: 0,
-      items: {
-        type: 'string'
-      }
-    },
-    'films':{
-      type: 'array',
-      uniqueItems: true,
-      minItems: 0,
-      items: {
-        type: 'string'
-      }
-    },
-    'created':{
-      type: 'string',
-      minLength: 25
-    },
-    'edited':{
-      type: 'string',
-      minLength: 25
-    },
-    'url': {
-      type: 'string',
-      minLength: 20
-    }
-  }
-}
+const planetSchema = require('./testUtils').planetSchema;
 
 describe('Planets endpoint tests', () => {
   describe('Perform regular tests', () => {
@@ -129,7 +47,7 @@ describe('Planets endpoint tests', () => {
   });
 
   describe('Perform negative test', () => {
-    it('Post should return a 405 error', (done) =>  {
+    it('Post request should return a 405 error', (done) =>  {
       chai.request('https://swapi.dev')
       .post('/api/planets/3/')
       .send({'name': 'Automated testing', 'Completed': true})
